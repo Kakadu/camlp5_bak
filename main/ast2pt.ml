@@ -7,8 +7,17 @@ open Parsetree;
 open Longident;
 open Asttypes;
 open Versdep;
+open Printf;
 
 open MLast;
+
+value log_file_name = "/tmp/camlp5log"  ;
+
+value _ = Sys.command (sprintf "echo '' > %s" log_file_name) ;
+
+value syslog (s: string) =
+  (* let (_:int) = Sys.command (sprintf "echo \"%s\" >> %s" s log_file_name) in *)
+  ();
 
 let ov = sys_ocaml_version in
 let oi =
@@ -684,6 +693,12 @@ value list_map_check f l =
         [ Some s → loop [s :: rev_l] l
         | None → None ]
     | [] → Some (List.rev rev_l) ]
+;
+
+value string_of_vala f v =
+  match v with
+  [ Ploc.VaAnt s   -> sprintf "VaAnt %s" s
+  | Ploc.VaVal arg -> sprintf "VaVal (%s)" (f arg) ]
 ;
 
 value class_info class_expr ci =
